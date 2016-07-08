@@ -1,13 +1,14 @@
 package com.example.miaor.stormyprofessional.UI;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.humidityValue) TextView mHumidityValue;
     @BindView(R.id.PrecipChanceValue) TextView mPrecipChanceValue;
     @BindView(R.id.timeValue) TextView mTimeValue;
+    @BindView(R.id.progressBar) ProgressBar mProgressBar;
+
     @BindView(R.id.refreshImage) ImageView mRefreshImage;
-    
     @OnClick(R.id.refreshImage)
     public void reFreshImage(){
         getForecast(latitude, longitude);
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mProgressBar.setVisibility(View.INVISIBLE);
         reFreshImage();
         getForecast(latitude, longitude);
     }
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 "/" + latitude + "," + longitude;
 
         if (NetworkIsAvailable()) {
+            getRefreshVisibility();
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url(forecastURL)
@@ -80,10 +85,24 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.e(TAG, "failure");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getRefreshVisibility();
+                        }
+                    });
+                    ErrorMessage();
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getRefreshVisibility();
+                        }
+                    });
+
                     try{
                         String jsonData = response.body().string();
                         Log.v(TAG, jsonData);
@@ -115,6 +134,17 @@ public class MainActivity extends AppCompatActivity {
         else {
             Toast.makeText(this, R.string.deadNetwork,
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void getRefreshVisibility() {
+        if(mProgressBar.getVisibility() == View.INVISIBLE){
+        mProgressBar.setVisibility(View.VISIBLE);
+        mRefreshImage.setVisibility(View.INVISIBLE);
+        }
+        else{
+            mRefreshImage.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
         }
     }
 

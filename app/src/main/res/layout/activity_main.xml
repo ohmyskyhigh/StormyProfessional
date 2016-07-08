@@ -138,6 +138,18 @@
         android:id="@+id/refreshImage"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/refresh"/>
+        android:src="@drawable/refresh"
+        android:contentDescription="@string/refresh"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@id/refreshImage"
+        android:layout_alignBottom="@+id/refreshImage"
+        android:layout_alignLeft="@+id/refreshImage"
+        android:layout_alignRight="@+id/refreshImage"/>
 
 </RelativeLayout>
