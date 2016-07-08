@@ -82,12 +82,10 @@ public class MainActivity extends AppCompatActivity {
                                     + "," + mCurrent.getPrecipProbability()
                                     + "," + mCurrent.getSummary()
                                     + "," + mCurrent.getFormattedTime());
-
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     updateDisplay();
-
                                 }
                             });
                         }
@@ -107,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private void updateDisplay() {
         mTemperatureValue.setText(mCurrent.getTemperature()+"");
         mHumidityValue.setText(mCurrent.getHumidity()+"%");
@@ -115,8 +112,6 @@ public class MainActivity extends AppCompatActivity {
         mSummaryText.setText(mCurrent.getSummary());
         mTimeValue.setText(mCurrent.getFormattedTime());
         mIconImage.setImageDrawable(getResources().getDrawable(mCurrent.getIconID()));
-
-
     }
 
     private Current getCurrentWeather(String jsonData) throws JSONException{
