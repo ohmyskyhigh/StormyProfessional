@@ -1,12 +1,14 @@
 package com.example.miaor.stormyprofessional.UI;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.miaor.stormyprofessional.Data.Current;
@@ -17,8 +19,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Date;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -38,12 +41,20 @@ public class MainActivity extends AppCompatActivity {
 
     private Current mCurrent;
 
+    @BindView(R.id.iconImage) ImageView mIconImage;
+    @BindView(R.id.SummaryText) TextView mSummaryText;
+    @BindView(R.id.temperatureValue) TextView mTemperatureValue;
+    @BindView(R.id.humidityValue) TextView mHumidityValue;
+    @BindView(R.id.PrecipChanceValue) TextView mPrecipChanceValue;
+    @BindView(R.id.timeValue) TextView mTimeValue;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         if (NetworkIsAvailable()) {
             OkHttpClient client = new OkHttpClient();
@@ -67,11 +78,18 @@ public class MainActivity extends AppCompatActivity {
                             mCurrent = getCurrentWeather(jsonData);
                             Log.i(TAG, mCurrent.getIconID()
                                     + "," + mCurrent.getHumidity()
-                                    + "," + mCurrent.getTemperature() +
-                                    "," + mCurrent.getPrecipProbability()
-                                    + "," + mCurrent.getTime()
-                                    + "," + mCurrent.getSummary());
+                                    + "," + mCurrent.getTemperature()
+                                    + "," + mCurrent.getPrecipProbability()
+                                    + "," + mCurrent.getSummary()
+                                    + "," + mCurrent.getFormattedTime());
 
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateDisplay();
+
+                                }
+                            });
                         }
                         else {
                             ErrorMessage();
@@ -89,6 +107,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    private void updateDisplay() {
+        mTemperatureValue.setText(mCurrent.getTemperature()+"");
+        mHumidityValue.setText(mCurrent.getHumidity()+"%");
+        mPrecipChanceValue.setText(mCurrent.getPrecipProbability()+"%");
+        mSummaryText.setText(mCurrent.getSummary());
+        mTimeValue.setText(mCurrent.getFormattedTime());
+        mIconImage.setImageDrawable(getResources().getDrawable(mCurrent.getIconID()));
+
+
+    }
+
     private Current getCurrentWeather(String jsonData) throws JSONException{
         JSONObject forecast = new JSONObject(jsonData);
         String timeZone = forecast.getString("timezone");
@@ -103,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         current.setHumidity(currently.getDouble("humidity"));
         current.setTemperature(currently.getDouble("temperature"));
         current.setPrecipProbability(currently.getDouble("precipProbability"));
+        current.setTimeZone(timeZone);
 
         return current;
     }

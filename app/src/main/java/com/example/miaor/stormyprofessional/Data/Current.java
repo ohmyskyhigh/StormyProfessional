@@ -2,16 +2,30 @@ package com.example.miaor.stormyprofessional.Data;
 
 import com.example.miaor.stormyprofessional.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * created by the one and only, Runkun Miao!!!!!!!!!
  */
 public class Current {
     private String mIcon;
     private String mSummary;
+    private String mTimeZone;
     private Long mTime;
     private Double mTemperature;
     private Double mHumidity;
     private Double mPrecipProbability;
+
+
+    public String getTimeZone() {
+        return mTimeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        mTimeZone = timeZone;
+    }
 
     public String getIcon() {
         return mIcon;
@@ -25,7 +39,7 @@ public class Current {
     public int setIconID(String icon) {
         switch (icon){
             case "clear-day":
-                return R.drawable.clear_day;
+                return R.drawable.sunny;
             case "clear-night":
                 return R.drawable.clear_night;
             case "rain":
@@ -65,20 +79,28 @@ public class Current {
         return mTime;
     }
 
+    public String getFormattedTime(){
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+        formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
+        Date dateTime = new Date(getTime() * 1000);
+
+        return formatter.format(dateTime);
+    }
+
     public void setTime(Long time) {
         mTime = time;
     }
 
-    public Double getTemperature() {
-        return mTemperature;
+    public int getTemperature() {
+        return (int)Math.round((mTemperature - 32)/1.8);
     }
 
     public void setTemperature(Double temperature) {
         mTemperature = temperature;
     }
 
-    public Double getHumidity() {
-        return mHumidity;
+    public int getHumidity() {
+        return (int) Math.round(mHumidity * 100);
     }
 
     public void setHumidity(Double humidity) {
