@@ -22,6 +22,7 @@ import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -35,8 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     Location mLocation = new Location();
     private String apiKey = "6b9448b8e21c2abe2fb623b25554a77c";
-    private String forecastURL = "https://api.forecast.io/forecast/" + apiKey +
-            "/" + mLocation.getZhangjiagang();
+    private Double latitude = 31.883;
+    private Double longitude = 120.629;
     ///https://api.forecast.io/forecast/6b9448b8e21c2abe2fb623b25554a77c/
 
     private Current mCurrent;
@@ -47,7 +48,12 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.humidityValue) TextView mHumidityValue;
     @BindView(R.id.PrecipChanceValue) TextView mPrecipChanceValue;
     @BindView(R.id.timeValue) TextView mTimeValue;
-
+    @BindView(R.id.refreshImage) ImageView mRefreshImage;
+    
+    @OnClick(R.id.refreshImage)
+    public void reFreshImage(){
+        getForecast(latitude, longitude);
+    }
 
 
     @Override
@@ -55,6 +61,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        reFreshImage();
+        getForecast(latitude, longitude);
+    }
+
+    private void getForecast(Double latitude, Double longitude) {
+        String forecastURL = "https://api.forecast.io/forecast/" + apiKey +
+                "/" + latitude + "," + longitude;
 
         if (NetworkIsAvailable()) {
             OkHttpClient client = new OkHttpClient();
