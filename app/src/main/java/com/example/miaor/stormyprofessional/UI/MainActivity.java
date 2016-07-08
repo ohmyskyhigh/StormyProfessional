@@ -58,7 +58,12 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG, jsonData);
                     if (response.isSuccessful()){
                         mCurrent = getCurrentWeather(jsonData);
-                        Log.i(TAG, "mCurrent");
+                        Log.i(TAG, mCurrent.getIconID()
+                                + "," + mCurrent.getHumidity()
+                                + "," + mCurrent.getTemperature() +
+                                "," + mCurrent.getPrecipProbability()
+                                + "," + mCurrent.getTime()
+                                + "," + mCurrent.getSummary());
 
                     }
                     else {
@@ -80,15 +85,14 @@ public class MainActivity extends AppCompatActivity {
         JSONObject currently = forecast.getJSONObject("currently");
         Current current = new Current();
 
-        Long time = currently.getLong("time");
-        String summary = currently.getString("summary");
-        String icon = currently.getString("icon");
-        double temperature =  currently.getDouble("temperature");
-        double humidity = currently.getDouble("humidity");
-        double precipProbability = currently.getDouble("precipProbability");
-        Log.i(TAG, time + "," + summary + "," + icon + "," + temperature + "," + humidity + "," + precipProbability);
+        current.setIcon(currently.getString("icon"));
+        current.setTime(currently.getLong("time"));
+        current.setSummary(currently.getString("summary"));
+        current.setHumidity(currently.getDouble("humidity"));
+        current.setTemperature(currently.getDouble("temperature"));
+        current.setPrecipProbability(currently.getDouble("precipProbability"));
 
-        return null;
+        return current;
     }
 
     private void ErrorMessage() {
