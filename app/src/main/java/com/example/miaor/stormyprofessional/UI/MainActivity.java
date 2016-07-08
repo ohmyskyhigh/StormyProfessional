@@ -1,9 +1,13 @@
 package com.example.miaor.stormyprofessional.UI;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.miaor.stormyprofessional.Data.Current;
 import com.example.miaor.stormyprofessional.Data.Location;
@@ -34,47 +38,55 @@ public class MainActivity extends AppCompatActivity {
 
     private Current mCurrent;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(forecastURL)
-                .build();
+        if (NetworkIsAvailable()) {
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(forecastURL)
+                    .build();
 
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "failure");
-            }
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e(TAG, "failure");
+                }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try{
-                    String jsonData = response.body().string();
-                    Log.v(TAG, jsonData);
-                    if (response.isSuccessful()){
-                        mCurrent = getCurrentWeather(jsonData);
-                        Log.i(TAG, mCurrent.getIconID()
-                                + "," + mCurrent.getHumidity()
-                                + "," + mCurrent.getTemperature() +
-                                "," + mCurrent.getPrecipProbability()
-                                + "," + mCurrent.getTime()
-                                + "," + mCurrent.getSummary());
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    try{
+                        String jsonData = response.body().string();
+                        Log.v(TAG, jsonData);
+                        if (response.isSuccessful()){
+                            mCurrent = getCurrentWeather(jsonData);
+                            Log.i(TAG, mCurrent.getIconID()
+                                    + "," + mCurrent.getHumidity()
+                                    + "," + mCurrent.getTemperature() +
+                                    "," + mCurrent.getPrecipProbability()
+                                    + "," + mCurrent.getTime()
+                                    + "," + mCurrent.getSummary());
 
+                        }
+                        else {
+                            ErrorMessage();
+                        }
                     }
-                    else {
-                        ErrorMessage();
+                    catch (IOException | JSONException e){
+                        Log.e(TAG, "Exception caught", e);
                     }
                 }
-                catch (IOException | JSONException e){
-                    Log.e(TAG, "Exception caught", e);
-                }
-            }
-        });
+            });
+        }
+        else {
+            Toast.makeText(this, R.string.deadNetwork,
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     private Current getCurrentWeather(String jsonData) throws JSONException{
@@ -98,5 +110,16 @@ public class MainActivity extends AppCompatActivity {
     private void ErrorMessage() {
         AlertDialogFragment dialog = new AlertDialogFragment();
         dialog.show(getFragmentManager(), "error_dialog");
+    }
+
+    private boolean NetworkIsAvailable() {
+        ConnectivityManager manager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        boolean isAvailable = false;
+        if (networkInfo != null && networkInfo.isConnected()){
+            isAvailable = true;
+        }
+        return  isAvailable;
     }
 }

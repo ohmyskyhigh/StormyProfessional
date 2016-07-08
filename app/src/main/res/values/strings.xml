@@ -3,4 +3,8 @@
     <string name="sorry">Oops, sorry!</string>
     <string name="error_message">error message</string>
     <string name="OK">OK</string>
+    <string name="zhangjiagang_cn">Zhangjiagang/CN</string>
+    <string name="humidity">Humidity</string>
+    <string name="rain_snow">Rain/Snow?</string>
+    <string name="deadNetwork">Your network is dead bro</string>
 </resources>
