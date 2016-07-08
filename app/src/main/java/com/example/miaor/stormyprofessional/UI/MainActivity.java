@@ -10,8 +10,10 @@ import com.example.miaor.stormyprofessional.Data.Location;
 import com.example.miaor.stormyprofessional.R;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Date;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -71,6 +73,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private Current getCurrentWeather(String jsonData) throws JSONException{
+        JSONObject forecast = new JSONObject(jsonData);
+        String timeZone = forecast.getString("timezone");
+        Log.i(TAG, timeZone);
+
+        JSONObject currently = forecast.getJSONObject("currently");
+        Current current = new Current();
+
+        Long time = currently.getLong("time");
+        String summary = currently.getString("summary");
+        String icon = currently.getString("icon");
+        double temperature =  currently.getDouble("temperature");
+        double humidity = currently.getDouble("humidity");
+        double precipProbability = currently.getDouble("precipProbability");
+        Log.i(TAG, time + "," + summary + "," + icon + "," + temperature + "," + humidity + "," + precipProbability);
+
         return null;
     }
 
