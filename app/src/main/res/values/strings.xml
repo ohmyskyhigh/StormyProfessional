@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Stormy Professional</string>
+    <string name="sorry">Oops, sorry!</string>
+    <string name="error_message">error message</string>
+    <string name="OK">OK</string>
 </resources>

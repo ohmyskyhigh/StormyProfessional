@@ -1,11 +1,15 @@
 package com.example.miaor.stormyprofessional.UI;
 
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.example.miaor.stormyprofessional.Data.Current;
 import com.example.miaor.stormyprofessional.Data.Location;
 import com.example.miaor.stormyprofessional.R;
+
+import org.json.JSONException;
 
 import java.io.IOException;
 
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
             "/" + mLocation.getZhangjiagang();
     ///https://api.forecast.io/forecast/6b9448b8e21c2abe2fb623b25554a77c/
 
+    private Current mCurrent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +51,31 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                try{
+                    String jsonData = response.body().string();
+                    Log.v(TAG, jsonData);
+                    if (response.isSuccessful()){
+                        mCurrent = getCurrentWeather(jsonData);
+                        Log.i(TAG, "mCurrent");
 
-                Log.v(TAG, "json");
+                    }
+                    else {
+                        ErrorMessage();
+                    }
+                }
+                catch (IOException | JSONException e){
+                    Log.e(TAG, "Exception caught", e);
+                }
             }
         });
+    }
+
+    private Current getCurrentWeather(String jsonData) throws JSONException{
+        return null;
+    }
+
+    private void ErrorMessage() {
+        AlertDialogFragment dialog = new AlertDialogFragment();
+        dialog.show(getFragmentManager(), "error_dialog");
     }
 }
