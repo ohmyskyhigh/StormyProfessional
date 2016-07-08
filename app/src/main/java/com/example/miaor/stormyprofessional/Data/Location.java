@@ -9,8 +9,4 @@ public class Location {
     public String getZhangjiagang() {
         return Zhangjiagang;
     }
-
-    public void setZhangjiagang(String zhangjiagang) {
-        Zhangjiagang = zhangjiagang;
-    }
 }
