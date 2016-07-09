@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.miaor.stormyprofessional.Data.Current;
-import com.example.miaor.stormyprofessional.Data.Location;
 import com.example.miaor.stormyprofessional.R;
 
 import org.json.JSONException;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    Location mLocation = new Location();
+
     private String apiKey = "6b9448b8e21c2abe2fb623b25554a77c";
     private Double latitude = 31.883;
     private Double longitude = 120.629;
