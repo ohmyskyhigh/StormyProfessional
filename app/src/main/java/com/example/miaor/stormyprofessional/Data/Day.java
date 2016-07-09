@@ -1,5 +1,12 @@
 package com.example.miaor.stormyprofessional.Data;
 
+
+import android.graphics.drawable.Drawable;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * created by the one and only, Runkun Miao!!!!!!!!!
  */
@@ -18,8 +25,8 @@ public class Day {
         mTime = time;
     }
 
-    public Double getTemperatureMax() {
-        return mTemperatureMax;
+    public int getTemperatureMax() {
+        return (int)Math.round((mTemperatureMax - 32)/1.8);
     }
 
     public void setTemperatureMax(Double temperatureMax) {
@@ -48,5 +55,19 @@ public class Day {
 
     public void setTimeZone(String timeZone) {
         mTimeZone = timeZone;
+    }
+
+
+    public String getDayOfTheWeek() {
+        SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
+        formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
+        Date dateTime = new Date(getTime() * 1000);
+
+        return formatter.format(dateTime);
+    }
+
+
+    public int getIconID() {
+        return Forecast.setIconID(mIcon);
     }
 }

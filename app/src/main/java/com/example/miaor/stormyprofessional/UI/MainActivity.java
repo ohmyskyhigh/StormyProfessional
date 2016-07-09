@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,9 @@ import com.example.miaor.stormyprofessional.Data.Day;
 import com.example.miaor.stormyprofessional.Data.Forecast;
 import com.example.miaor.stormyprofessional.Data.Hour;
 import com.example.miaor.stormyprofessional.R;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,21 +52,37 @@ public class MainActivity extends AppCompatActivity {
 
     private Forecast mForecast;
 
-    @BindView(R.id.iconImage) ImageView mIconImage;
-    @BindView(R.id.SummaryText) TextView mSummaryText;
-    @BindView(R.id.temperatureValue) TextView mTemperatureValue;
-    @BindView(R.id.humidityValue) TextView mHumidityValue;
-    @BindView(R.id.PrecipChanceValue) TextView mPrecipChanceValue;
-    @BindView(R.id.timeValue) TextView mTimeValue;
-    @BindView(R.id.progressBar) ProgressBar mProgressBar;
-    @BindView(R.id.refreshImage) ImageView mRefreshImage;
+    @BindView(R.id.iconImage)
+    ImageView mIconImage;
+    @BindView(R.id.SummaryText)
+    TextView mSummaryText;
+    @BindView(R.id.temperatureValue)
+    TextView mTemperatureValue;
+    @BindView(R.id.humidityValue)
+    TextView mHumidityValue;
+    @BindView(R.id.PrecipChanceValue)
+    TextView mPrecipChanceValue;
+    @BindView(R.id.timeValue)
+    TextView mTimeValue;
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
+    @BindView(R.id.refreshImage)
+    ImageView mRefreshImage;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient mClient;
+
+
     @OnClick(R.id.refreshImage)
-    public void reFreshImage(){
+    public void reFreshImage() {
         getForecast(latitude, longitude);
     }
 
+
     @OnClick(R.id.dailyButton)
-    public void startDailyActivity(){
+    public void startDailyActivity() {
         Intent intent = new Intent(this, DailyForecastActivity.class);
         startActivity(intent);
     }
@@ -77,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.INVISIBLE);
         reFreshImage();
         getForecast(latitude, longitude);
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -115,10 +138,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
 
-                    try{
+                    try {
                         String jsonData = response.body().string();
                         Log.v(TAG, jsonData);
-                        if (response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             mForecast = parseForecastDetail(jsonData);
 
                             Log.i(TAG, "Current: "
@@ -129,24 +152,24 @@ public class MainActivity extends AppCompatActivity {
                                     + "," + mForecast.getCurrent().getSummary()
                                     + "," + mForecast.getCurrent().getFormattedTime());
 
+                            Day[] days = new Day[];
+                            Log.i(TAG, "day: " + day.g)
+
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     updateDisplay();
                                 }
                             });
-                        }
-                        else {
+                        } else {
                             ErrorMessage();
                         }
-                    }
-                    catch (IOException | JSONException e){
+                    } catch (IOException | JSONException e) {
                         Log.e(TAG, "Exception caught", e);
                     }
                 }
             });
-        }
-        else {
+        } else {
             Toast.makeText(this, R.string.deadNetwork,
                     Toast.LENGTH_LONG).show();
         }
@@ -154,11 +177,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getRefreshVisibility() {
-        if(mProgressBar.getVisibility() == View.INVISIBLE){
-        mProgressBar.setVisibility(View.VISIBLE);
-        mRefreshImage.setVisibility(View.INVISIBLE);
-        }
-        else{
+        if (mProgressBar.getVisibility() == View.INVISIBLE) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            mRefreshImage.setVisibility(View.INVISIBLE);
+        } else {
             mRefreshImage.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.INVISIBLE);
         }
@@ -167,25 +189,27 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateDisplay() {
         Current mCurrent = mForecast.getCurrent();
-        mTemperatureValue.setText(mCurrent.getTemperature()+"");
-        mHumidityValue.setText(mCurrent.getHumidity()+"%");
-        mPrecipChanceValue.setText(mCurrent.getPrecipProbability()+"%");
+        mTemperatureValue.setText(mCurrent.getTemperature() + "");
+        mHumidityValue.setText(mCurrent.getHumidity() + "%");
+        mPrecipChanceValue.setText(mCurrent.getPrecipProbability() + "%");
         mSummaryText.setText(mCurrent.getSummary());
         mTimeValue.setText(mCurrent.getFormattedTime());
         mIconImage.setImageDrawable(getResources().getDrawable(mCurrent.getIconID()));
     }
 
-    private Forecast parseForecastDetail(String jsonData) throws JSONException{
+
+    private Forecast parseForecastDetail(String jsonData) throws JSONException {
         Forecast forecast = new Forecast();
         forecast.setCurrent(getCurrentWeather(jsonData));
         forecast.setDay(getDayWeather(jsonData));
         forecast.setHour(getHourWeather(jsonData));
 
+
         return forecast;
     }
 
 
-    private Hour[] getHourWeather(String jsonData) throws JSONException{
+    private Hour[] getHourWeather(String jsonData) throws JSONException {
         JSONObject forecast = new JSONObject(jsonData);
         String timeZone = forecast.getString("timezone");
         Log.i(TAG, "Hour: " + timeZone);
@@ -193,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         JSONObject hourly = forecast.getJSONObject("hourly");
         JSONArray data = hourly.getJSONArray("data");
         Hour[] hours = new Hour[data.length()];
-        for(int i=0; i<data.length(); i++){
+        for (int i = 0; i < data.length(); i++) {
             JSONObject jsonHour = data.getJSONObject(i);
             Hour hour = new Hour();
             hour.setTime(jsonHour.getLong("time"));
@@ -208,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private Day[] getDayWeather(String jsonData) throws JSONException{
+    private Day[] getDayWeather(String jsonData) throws JSONException {
         JSONObject forecast = new JSONObject(jsonData);
         String timeZone = forecast.getString("timezone");
         Log.i(TAG, "Day: " + timeZone);
@@ -216,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         JSONObject daily = forecast.getJSONObject("daily");
         JSONArray data = daily.getJSONArray("data");
         Day[] days = new Day[data.length()];
-        for(int i=0; i<data.length(); i++) {
+        for (int i = 0; i < data.length(); i++) {
             JSONObject jsonDay = data.getJSONObject(i);
             Day day = new Day();
             day.setTimeZone(timeZone);
@@ -231,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private Current getCurrentWeather(String jsonData) throws JSONException{
+    private Current getCurrentWeather(String jsonData) throws JSONException {
         JSONObject forecast = new JSONObject(jsonData);
         String timeZone = forecast.getString("timezone");
         Log.i(TAG, "Current: " + timeZone);
@@ -262,9 +286,51 @@ public class MainActivity extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         boolean isAvailable = false;
-        if (networkInfo != null && networkInfo.isConnected()){
+        if (networkInfo != null && networkInfo.isConnected()) {
             isAvailable = true;
         }
-        return  isAvailable;
+        return isAvailable;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        mClient.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.miaor.stormyprofessional.UI/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(mClient, viewAction);
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Main Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.example.miaor.stormyprofessional.UI/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(mClient, viewAction);
+        mClient.disconnect();
     }
 }
