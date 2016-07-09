@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/circleImageList"
+        android:id="@+id/circleImageDailyList"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -20,22 +20,22 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/iconImageList"
+        android:id="@+id/iconImageDailyList"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/circleImageList"
-        android:layout_toEndOf="@+id/circleImageList"
+        android:layout_toRightOf="@+id/circleImageDailyList"
+        android:layout_toEndOf="@+id/circleImageDailyList"
         android:src="@drawable/sunny"
         android:layout_marginLeft="10dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/dayNameList"
+        android:id="@+id/dayNameDailyList"
         android:textSize="20sp"
         android:textColor="@color/textColor"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/iconImageList"
-        android:layout_toEndOf="@+id/iconImageList"
+        android:layout_toRightOf="@+id/iconImageDailyList"
+        android:layout_toEndOf="@+id/iconImageDailyList"
         tools:text="Wednesday"
         android:gravity="center"/>
 
@@ -45,13 +45,13 @@
         tools:text="100"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
-        android:id="@+id/temperatureValueList"
+        android:id="@+id/temperatureValueDailyList"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/circleImageList"
-        android:layout_alignLeft="@+id/circleImageList"
-        android:layout_alignRight="@+id/circleImageList"
-        android:layout_alignBaseline="@+id/circleImageList"
+        android:layout_alignTop="@+id/circleImageDailyList"
+        android:layout_alignLeft="@+id/circleImageDailyList"
+        android:layout_alignRight="@+id/circleImageDailyList"
+        android:layout_alignBaseline="@+id/circleImageDailyList"
         android:gravity="center"/>
 </RelativeLayout>
