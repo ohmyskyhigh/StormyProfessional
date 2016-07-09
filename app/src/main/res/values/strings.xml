@@ -8,4 +8,6 @@
     <string name="rain_snow">Rain/Snow?</string>
     <string name="deadNetwork">Your network is dead bro</string>
     <string name="refresh">refresh</string>
+    <string name="daily">Daily</string>
+    <string name="hourly">Hourly</string>
 </resources>
