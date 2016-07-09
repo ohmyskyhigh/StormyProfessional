@@ -1,6 +1,7 @@
 package com.example.miaor.stormyprofessional.UI;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
@@ -54,11 +55,16 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.PrecipChanceValue) TextView mPrecipChanceValue;
     @BindView(R.id.timeValue) TextView mTimeValue;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
-
     @BindView(R.id.refreshImage) ImageView mRefreshImage;
     @OnClick(R.id.refreshImage)
     public void reFreshImage(){
         getForecast(latitude, longitude);
+    }
+
+    @OnClick(R.id.dailyButton)
+    public void startDailyActivity(){
+        Intent intent = new Intent(this, DailyForecastActivity.class);
+        startActivity(intent);
     }
 
 

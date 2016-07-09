@@ -1,12 +1,13 @@
 package com.example.miaor.stormyprofessional.UI;
 
 
+import android.app.ListActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.miaor.stormyprofessional.R;
 
-public class DailyForecast extends AppCompatActivity {
+public class DailyForecastActivity extends ListActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
