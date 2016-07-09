@@ -38,6 +38,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    public static final String Daily_Forecast = "Daily_Forecast";
 
 
     private String apiKey = "6b9448b8e21c2abe2fb623b25554a77c";
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.dailyButton)
     public void startDailyActivity(){
         Intent intent = new Intent(this, DailyForecastActivity.class);
+        intent.putExtra(Daily_Forecast, mForecast.getDay());
         startActivity(intent);
     }
 
@@ -180,6 +182,8 @@ public class MainActivity extends AppCompatActivity {
         forecast.setCurrent(getCurrentWeather(jsonData));
         forecast.setDay(getDayWeather(jsonData));
         forecast.setHour(getHourWeather(jsonData));
+
+
 
         return forecast;
     }

@@ -37,30 +37,7 @@ public class Current {
 
     //clear-day, clear-night, rain, snow, sleet, wind, fog, cloudy, partly-cloudy-day, or partly-cloudy-night
     public int setIconID(String icon) {
-        switch (icon){
-            case "clear-day":
-                return R.drawable.sunny;
-            case "clear-night":
-                return R.drawable.clear_night;
-            case "rain":
-                return R.drawable.rain;
-            case "snow":
-                return R.drawable.snow;
-            case "sleet":
-                return R.drawable.sleet;
-            case "wind":
-                return R.drawable.wind;
-            case "fog":
-                return R.drawable.fog;
-            case "cloudy":
-                return R.drawable.cloudy;
-            case "partly-cloudy-day":
-                return R.drawable.partly_cloudy;
-            case "partly-cloudy-nigh":
-                return R.drawable.cloudy_night;
-            default:
-                return R.drawable.sunny;
-        }
+        return Forecast.setIconID(icon);
     }
 
     public int getIconID() {
