@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.miaor.stormyprofessional.Data.Current;
+import com.example.miaor.stormyprofessional.Data.Day;
+import com.example.miaor.stormyprofessional.Data.Forecast;
 import com.example.miaor.stormyprofessional.R;
 
 import org.json.JSONException;
@@ -40,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     private Double longitude = 120.629;
     ///https://api.forecast.io/forecast/6b9448b8e21c2abe2fb623b25554a77c/
 
-    private Current mCurrent;
+
+    private Forecast mForecast;
 
     @BindView(R.id.iconImage) ImageView mIconImage;
     @BindView(R.id.SummaryText) TextView mSummaryText;
@@ -106,13 +109,13 @@ public class MainActivity extends AppCompatActivity {
                         String jsonData = response.body().string();
                         Log.v(TAG, jsonData);
                         if (response.isSuccessful()){
-                            mCurrent = getCurrentWeather(jsonData);
-                            Log.i(TAG, mCurrent.getIconID()
-                                    + "," + mCurrent.getHumidity()
-                                    + "," + mCurrent.getTemperature()
-                                    + "," + mCurrent.getPrecipProbability()
-                                    + "," + mCurrent.getSummary()
-                                    + "," + mCurrent.getFormattedTime());
+                            mForecast = parseForecastDetail(jsonData);
+                            Log.i(TAG, mForecast.getCurrent().getIconID()
+                                    + "," + mForecast.getCurrent().getHumidity()
+                                    + "," + mForecast.getCurrent().getTemperature()
+                                    + "," + mForecast.getCurrent().getPrecipProbability()
+                                    + "," + mForecast.getCurrent().getSummary()
+                                    + "," + mForecast.getCurrent().getFormattedTime());
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -148,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateDisplay() {
+        Current mCurrent = mForecast.getCurrent();
         mTemperatureValue.setText(mCurrent.getTemperature()+"");
         mHumidityValue.setText(mCurrent.getHumidity()+"%");
         mPrecipChanceValue.setText(mCurrent.getPrecipProbability()+"%");
@@ -156,10 +160,18 @@ public class MainActivity extends AppCompatActivity {
         mIconImage.setImageDrawable(getResources().getDrawable(mCurrent.getIconID()));
     }
 
+    private Forecast parseForecastDetail(String jsonData) throws JSONException{
+        Forecast forecast = new Forecast();
+        forecast.setCurrent(getCurrentWeather(jsonData));
+
+
+        return forecast;
+    }
+
     private Current getCurrentWeather(String jsonData) throws JSONException{
         JSONObject forecast = new JSONObject(jsonData);
         String timeZone = forecast.getString("timezone");
-        Log.i(TAG, timeZone);
+        Log.i(TAG, "Current: " + timeZone);
 
         JSONObject currently = forecast.getJSONObject("currently");
         Current current = new Current();
@@ -174,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
 
         return current;
     }
+
+
 
     private void ErrorMessage() {
         AlertDialogFragment dialog = new AlertDialogFragment();

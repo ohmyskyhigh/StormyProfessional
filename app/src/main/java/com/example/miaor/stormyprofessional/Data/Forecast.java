@@ -5,8 +5,8 @@ package com.example.miaor.stormyprofessional.Data;
  */
 public class Forecast {
     private Current mCurrent;
-    private Day mDay;
-    private Hour mHour;
+    private Day[] mDay;
+    private Hour[] mHour;
 
     public Current getCurrent() {
         return mCurrent;
@@ -16,19 +16,19 @@ public class Forecast {
         mCurrent = current;
     }
 
-    public Day getDay() {
+    public Day[] getDay() {
         return mDay;
     }
 
-    public void setDay(Day day) {
+    public void setDay(Day[] day) {
         mDay = day;
     }
 
-    public Hour getHour() {
+    public Hour[] getHour() {
         return mHour;
     }
 
-    public void setHour(Hour hour) {
+    public void setHour(Hour[] hour) {
         mHour = hour;
     }
 }
