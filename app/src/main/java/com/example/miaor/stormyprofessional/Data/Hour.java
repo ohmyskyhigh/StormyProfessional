@@ -4,6 +4,10 @@ package com.example.miaor.stormyprofessional.Data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * created by the one and only, Runkun Miao!!!!!!!!!
  */
@@ -62,6 +66,14 @@ public class Hour implements Parcelable{
 
     public int getIconID(){
         return Forecast.setIconID(mIcon);
+    }
+
+    public String getHour() {
+        SimpleDateFormat formatter = new SimpleDateFormat("h a");
+        formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
+        Date dateTime = new Date(getTime() * 1000);
+
+        return formatter.format(dateTime);
     }
 
 
