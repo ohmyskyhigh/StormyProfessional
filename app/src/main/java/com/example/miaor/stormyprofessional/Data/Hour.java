@@ -1,9 +1,17 @@
 package com.example.miaor.stormyprofessional.Data;
 
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 /**
  * created by the one and only, Runkun Miao!!!!!!!!!
  */
-public class Hour {
+public class Hour implements Parcelable{
     private Long mTime;
     private Double mTemperature;
     private String mTimeZone;
@@ -18,8 +26,8 @@ public class Hour {
         mTime = time;
     }
 
-    public Double getTemperature() {
-        return mTemperature;
+    public int getTemperature() {
+        return (int)Math.round((mTemperature - 32)/1.8);
     }
 
     public void setTemperature(Double temperature) {
@@ -49,4 +57,55 @@ public class Hour {
     public void setIcon(String icon) {
         mIcon = icon;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public int getIconID(){
+        return Forecast.setIconID(mIcon);
+    }
+
+    public String getHour() {
+        SimpleDateFormat formatter = new SimpleDateFormat("h a");
+        formatter.setTimeZone(TimeZone.getTimeZone(getTimeZone()));
+        Date dateTime = new Date(getTime() * 1000);
+
+        return formatter.format(dateTime);
+    }
+
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(mSummary);
+        parcel.writeString(mIcon);
+        parcel.writeString(mTimeZone);
+        parcel.writeDouble(mTemperature);
+        parcel.writeLong(mTime);
+    }
+
+    private Hour(Parcel in){
+        mSummary = in.readString();
+        mIcon = in.readString();
+        mTimeZone = in.readString();
+        mTemperature = in.readDouble();
+        mTime = in.readLong();
+    }
+
+    public Hour(){}
+
+    public static final Creator<Hour>CREATOR = new Creator<Hour>() {
+        @Override
+        public Hour createFromParcel(Parcel parcel) {
+            return new Hour(parcel);
+        }
+
+
+        @Override
+        public Hour[] newArray(int i) {
+            return new Hour[i];
+        }
+    };
 }
